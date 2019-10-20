@@ -1,4 +1,10 @@
 # Neural networks @ FIIT - Project Proposal 🖼
+## Organisational:
+**Authors:** Martin Tonhauzer, Viktor Valaštín
+
+**Course Supervisor:** Ing. Michal Farkaš
+
+**Academic Year:** 2019/2020, Winter Semester
 # Image upscaling
 
 ## Motivation
