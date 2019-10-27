@@ -8,7 +8,8 @@ import json
 # api-endpoint 
 URL = "https://pixabay.com/api/"
 SAVE_DIR='/Users/vikival/Downloads/dirty'
-  
+METADATA_DIR='/Users/vikival/Downloads/meta'
+
 # location given here
 key='7487917-553ab463a47fc10f7503440b1'
 q = "autumn"
@@ -28,7 +29,7 @@ def dataMapper(image):
 
 imageIterator = list(map(dataMapper, data['hits']))
 
-with open(os.path.join(SAVE_DIR, q+'.json'), 'w') as file:
+with open(os.path.join(METADATA_DIR, q+'.json'), 'w') as file:
     json.dump(imageIterator, file)
 
 def fetchImage(image):
