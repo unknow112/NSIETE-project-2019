@@ -13,10 +13,17 @@ Output:
 images inside outputdir
 """
 
-
-
-def crop():
+def get_crop_area(width, height):
+    #if width > height:
     pass
+
+def square(img):
+    width, height = img.size
+    if width == height:
+        return img
+
+    new_area = get_crop_area(*img.size)
+    return img.crop(new_area)
 
 def resize():
     pass
