@@ -14,10 +14,10 @@ filePaths = map(lambda x: x.path, files)
 imageObjects = list(map(  lambda x: { 'img_obj' : Image.open(x), "img_name": x.split('/')[-1] } , filePaths   ))
 """
 
-def resize(ratio, image):
-    width, height = image.size
-    new_width, new_height = int(width*ratio), int(height*ratio)
-    return image.resize((new_width,new_height), Image.ANTIALIAS)
+def resize(new_size, image):
+    w,h = image.size
+    assert w == h
+    return image.resize((new_size,new_size), Image.ANTIALIAS)
 
 
 """deprecated
