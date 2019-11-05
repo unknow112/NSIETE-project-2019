@@ -1,48 +1,55 @@
 """
-requirements
+take Images iterator and output folders, crop (find bigest centered square) 
+and resize images
 
-take dataset iterator and output folder , crop (find bigest centered square) and resize images
+use function `workflow(image_iterator, output_folders)`
 
 Input: 
-iterator of DirEntry objects path member is full path and DirEntries are all images!
-dictionary like:
-{
-    int squared_output_resolution : str  full_output_folder
-}
+    image_iterator: iterator of objects where `path` member is full file 
+        path, `name` member is filename and every object represents valid 
+        image. See `os.scandir`
+
+    output_folders: dictionary like:
+    ```
+    {
+        int squared_output_resolution : str  full_output_folder
+    }
+    ```
+
 Output: 
-images inside outputdir
+    images inside outputdirs
 """
 
-def get_crop_area(width, height):
-    assert height != width
-    shift = abs((width - height)) // 2
- 
-    if width > height:
-        rest = width - shift
-        return shift, 0, rest, height
-
-    if height > width:
-        rest = height - shift
-        return 0, shift, width, rest
-
-    
-    
-
-def square(img):
-    width, height = img.size
-    if width == height:
-        return img
-
-    new_area = get_crop_area(*img.size)
-    return img.crop(new_area)
-
-def resize():
-    pass
-
-def workflow():
-    pass
-
-def main():
-    pass
+from resizer import square,resize
+from os import path
+from PIL import Image
 
 
+
+def open_images(iterator):
+    return map(
+        lambda x: { 
+            'path': x.path,
+            'name': x.name,
+            'img_obj': Image.open(x.path)
+        },
+        iterator
+    )
+
+
+def workflow(image_iterator, output_folders):
+    for key in output_folders:
+        assert output_folders[key][0] == '/'
+
+
+    opened_images = open_images(image_iterator)
+
+    print("squaring....")
+    squared_images = list(map(lambda x: { **x , 'img_obj': square(x['img_obj']) }, opened_images ))
+
+    for resolution in output_folders:
+        resized_images = map(lambda img: {**img, 'img_obj':resize(resolution, img['img_obj'])} , squared_images)
+
+        for image in resized_images:
+            print("saving image %s in resolution %dpx" %(image['name'],resolution))
+            image['img_obj'].save(path.join(output_folders[resolution],image['name']))
