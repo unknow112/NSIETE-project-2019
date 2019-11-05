@@ -14,8 +14,19 @@ images inside outputdir
 """
 
 def get_crop_area(width, height):
-    #if width > height:
-    pass
+    assert height != width
+    shift = abs((width - height)) // 2
+ 
+    if width > height:
+        rest = width - shift
+        return shift, 0, rest, height
+
+    if height > width:
+        rest = height - shift
+        return 0, shift, width, rest
+
+    
+    
 
 def square(img):
     width, height = img.size
