@@ -50,7 +50,10 @@ class Generator(keras.Model):
             conv(9,64,1),
             PReLU(),
             SkipAdder([
-                *[residual_block(3,64,1)] * residual_block_count,
+                *[
+                    residual_block(3,64,1)
+                    for _ in range(residual_block_count)
+                 ],
                 conv(3,64,1),
                 BatchNormalization(),                    
             ]),
