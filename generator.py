@@ -40,6 +40,12 @@ class Generator(keras.Model):
             BatchNormalization()
         ])
 
+        upsampling_block = lambda :[
+            conv(3,256,1),
+            UpSampling2D(),
+            PReLU()
+        ]
+
         self.model = [
             conv(9,64,1),
             PReLU(),
@@ -48,12 +54,8 @@ class Generator(keras.Model):
                 conv(3,64,1),
                 BatchNormalization(),                    
             ]),
-            conv(3,256,1),
-            UpSampling2D(),
-            PReLU(),
-            conv(3,256,1),
-            UpSampling2D(),
-            PReLU(),
+            *upsampling_block,
+            *upsampling_block,
             conv(9,3,1),
             Activation('tanh')
         ]
