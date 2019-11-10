@@ -1,5 +1,5 @@
 import tensorflow.keras  as keras
-from tensorflow.keras.layers import Conv2D, Dense, PReLU, BatchNormalization, Flatten, add, UpSampling2D, Wrapper
+from tensorflow.keras.layers import Conv2D, Dense, PReLU, BatchNormalization, Flatten, add, UpSampling2D, Activation
 from tensorflow.keras.activations import sigmoid
 
 from functools import reduce
@@ -48,10 +48,14 @@ class Generator(keras.Model):
                 conv(3,64,1),
                 BatchNormalization(),                    
             ]),
-            *[conv(3,256,1),
-            UpSampling2D(size=2),
-            PReLU()] * 2,
-            conv(9,3,1)
+            conv(3,256,1),
+            UpSampling2D(),
+            PReLU(),
+            conv(3,256,1),
+            UpSampling2D(),
+            PReLU(),
+            conv(9,3,1),
+            Activation('tanh')
         ]
 
     def call(self, x):
