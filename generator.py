@@ -54,8 +54,8 @@ class Generator(keras.Model):
                 conv(3,64,1),
                 BatchNormalization(),                    
             ]),
-            *upsampling_block,
-            *upsampling_block,
+            *upsampling_block(),
+            *upsampling_block(),
             conv(9,3,1),
             Activation('tanh')
         ]
