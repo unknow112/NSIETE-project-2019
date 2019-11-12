@@ -37,5 +37,11 @@ class Discriminator(keras.Model):
             Flatten(), # wild guess, try maybe before first dense
             Dense(1,activation=sigmoid)
         ]
+        
+    #def loss(self, pred, true):
+    #    pass 
+
     def call(self, x):
         return reduce(lambda partial,layer: layer(partial), self.model, x)
+
+    
