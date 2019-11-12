@@ -1,8 +1,9 @@
-
+from time import time
 from skimage.io import imread, imsave
 import numpy as np
 from os import scandir,path
-from gan import dis_loss, gen_loss
+from gan import Gan
+
 
 def to_batch(a, bsize):
     if len(a) % bsize == 0:
@@ -47,26 +48,36 @@ BATCH_SIZE = 4
 SAMPLE_SIZE = len(LR_IMAGES)
 
 
-#gan = Gan() #not implemented
+
+def train():
+    gan = Gan()
+    gan.compile()
+
+    for epoch in range(EPOCH_COUNT):
+        print("doing epoch no %d " % epoch, end='',flush=True)
+        start = time()
+
+        lr , hr = shuffle(LR_IMAGES, HR_IMAGES)
+
+        lr_batches = to_batch(lr, BATCH_SIZE)
+        hr_batches = to_batch(hr, BATCH_SIZE)
 
 
-"""
+        for blr, bhr in zip(lr_batches,hr_batches):
+            bsr, classification = gan.g.predict(blr)
 
+            gan.d.trainable = True
 
-for _ in range(EPOCH_COUNT):
-    lr , hr = shuffle(LR_IMAGES, HR_IMAGES)
+            gan.d.train_on_batch(
+                np.concatenate([bhr, bsr]),
+                np.concatenate([np.ones(len(bhr)), classification])
+            )
 
-    lr_batches = to_batch(lr, BATCH_SIZE)
-    hr_batches = to_batch(hr, BATCH_SIZE)
+            gan.d.trainable = False
+            gan.g.train_on_batch(blr,  [bhr, classification])
+        
+        print(" took %.2fs" % time() - start)
 
-
-    for blr, bhr in zip(lr_batches,hr_batches):
-        bsr = gan.g.call(blr)
-
-        whole_batch_x = np.concatenate((bsr, bhr))
-        whole_batch_y = np.concatenate((np.zeros(bsr.shape[0],dtype=int),np.ones(bhr.shape[0], dtype=int)))
-
-        whole_batch_yp = gan.d.call(whole_batch_x)
 
 
 
@@ -78,5 +89,3 @@ for _ in range(EPOCH_COUNT):
 
 
 
-
-"""
