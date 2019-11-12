@@ -1,7 +1,7 @@
 import tensorflow.keras  as keras
 from tensorflow.keras.layers import Conv2D, Dense, LeakyReLU, BatchNormalization, Flatten
 from tensorflow.keras.activations import tanh
-
+import numpy as np
 from functools import reduce
 
 class Discriminator(keras.Model):
