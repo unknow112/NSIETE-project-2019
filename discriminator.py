@@ -1,6 +1,6 @@
 import tensorflow.keras  as keras
 from tensorflow.keras.layers import Conv2D, Dense, LeakyReLU, BatchNormalization, Flatten
-from tensorflow.keras.activations import sigmoid
+from tensorflow.keras.activations import tanh
 
 from functools import reduce
 
@@ -35,7 +35,7 @@ class Discriminator(keras.Model):
             Dense(1024),
             LeakyReLU(alpha=0.2),
             Flatten(), # wild guess, try maybe before first dense
-            Dense(1,activation=sigmoid)
+            Dense(1,activation=tanh)
         ]
         
     #def loss(self, pred, true):
