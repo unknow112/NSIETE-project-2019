@@ -64,4 +64,4 @@ class Generator(keras.Model):
         ]
 
     def call(self, x):
-        return reduce(lambda partial,layer: layer(partial), self.model, x)
+        return reduce(lambda partial,layer: layer(partial), self.model, np.array([x]))
