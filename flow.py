@@ -72,7 +72,7 @@ def train():
 
             gan.d.train_on_batch(
                 np.concatenate([bhr, bsr]),
-                np.concatenate([np.ones(len(bhr)), classification])
+                np.concatenate([np.ones((len(bhr),1)), classification])
             )
 
             gan.d.trainable = False
