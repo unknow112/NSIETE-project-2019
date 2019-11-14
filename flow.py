@@ -66,6 +66,7 @@ def train():
         for blr, bhr in zip(lr_batches,hr_batches):
             print('ping', end='')
             bsr, classification = gan.predict(blr)
+            print('\nbsr shape: %s, class shape %s' %(bsr.shape, classification.shape))
 
             gan.d.trainable = True
 
