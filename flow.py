@@ -64,7 +64,8 @@ def train():
 
 
         for blr, bhr in zip(lr_batches,hr_batches):
-            bsr, classification = gan.g.predict(blr)
+            print('ping', end='')
+            bsr, classification = gan.predict(blr)
 
             gan.d.trainable = True
 
