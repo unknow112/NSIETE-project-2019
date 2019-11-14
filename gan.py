@@ -14,8 +14,8 @@ class Gan(keras.Model):
     def compile(self, **kwargs):
         opt = keras.optimizers.Adam(0.001, 0.5)
 
-        gen_loss = tfgan.losses.wasserstein_generator_loss
-        dis_loss = tfgan.losses.wasserstein_discriminator_loss
+        gen_loss = tfgan.losses.wargs.wasserstein_generator_loss
+        dis_loss = tfgan.losses.wargs.wasserstein_discriminator_loss
 
         self.g.compile(optimizer=opt,loss=gen_loss)
         self.d.compile(optimizer=opt,loss=dis_loss)
