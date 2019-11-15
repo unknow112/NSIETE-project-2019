@@ -43,7 +43,7 @@ HR_IMAGES = np.array(list(map(
 )))
 
 
-BATCH_SIZE = 4
+BATCH_SIZE = 20
 SAMPLE_SIZE = len(LR_IMAGES)
 
 
