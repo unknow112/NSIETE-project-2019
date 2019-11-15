@@ -82,7 +82,7 @@ def train():
             gan.train_on_batch(blr,  [bhr, classification])
         
         print(" took %.2fs" % time() - start)
-
+    return gan
 
 
 
