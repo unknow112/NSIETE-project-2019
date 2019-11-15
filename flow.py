@@ -67,8 +67,6 @@ def train(EPOCH_COUNT = 10):
             bsr = gan.g.predict(blr)
 #            print('\nbsr shape: %s, class shape %s' %(bsr.shape, classification.shape))
 
-            gan.d.trainable = True
-
             gan.d.train_on_batch(
                 np.concatenate([bhr, bsr]),
                 np.concatenate([
@@ -77,7 +75,6 @@ def train(EPOCH_COUNT = 10):
                 ])
             )
 
-            gan.d.trainable = False
             gan.train_on_batch(blr,  [bhr, np.ones((len(bhr),1))])
         
         print(" took %.2fs" % (time() - start))

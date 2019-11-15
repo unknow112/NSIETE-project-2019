@@ -9,7 +9,6 @@ class Gan(keras.Model):
 
         self.g = Generator()
         self.d = Discriminator()
-        self.d.trainable = False
 
     def compile(self, **kwargs):
         opt = keras.optimizers.Adam(0.001, 0.5)
