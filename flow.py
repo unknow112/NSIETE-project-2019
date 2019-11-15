@@ -65,18 +65,21 @@ def train():
 
         for blr, bhr in zip(lr_batches,hr_batches):
             print('ping', end='')
-            bsr, classification = gan.predict(blr)
+            bsr = gan.g.predict(blr)
             print('\nbsr shape: %s, class shape %s' %(bsr.shape, classification.shape))
 
             gan.d.trainable = True
 
             gan.d.train_on_batch(
                 np.concatenate([bhr, bsr]),
-                np.concatenate([np.ones((len(bhr),1)), classification])
+                np.concatenate([
+                    np.ones((len(bhr),1)), 
+                    np.full((len(bhr),1)), -1)
+                ])
             )
 
             gan.d.trainable = False
-            gan.g.train_on_batch(blr,  [bhr, classification])
+            gan.train_on_batch(blr,  [bhr, classification])
         
         print(" took %.2fs" % time() - start)
 
