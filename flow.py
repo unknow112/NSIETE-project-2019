@@ -43,13 +43,12 @@ HR_IMAGES = np.array(list(map(
 )))
 
 
-EPOCH_COUNT = 10
 BATCH_SIZE = 4
 SAMPLE_SIZE = len(LR_IMAGES)
 
 
 
-def train():
+def train(EPOCH_COUNT = 10):
     gan = Gan()
     gan.compile()
 
