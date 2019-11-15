@@ -81,7 +81,7 @@ def train():
             gan.d.trainable = False
             gan.train_on_batch(blr,  [bhr, np.ones((len(bhr),1))])
         
-        print(" took %.2fs" % time() - start)
+        print(" took %.2fs" % (time() - start))
     return gan
 
 
