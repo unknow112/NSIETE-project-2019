@@ -3,7 +3,7 @@ from skimage.io import imread, imsave
 import numpy as np
 from os import scandir,path
 from gan import Gan
-
+import gc
 
 def to_batch(a, bsize):
     if len(a) % bsize == 0:
@@ -77,6 +77,7 @@ def train(EPOCH_COUNT = 10):
             gan.train_on_batch(blr,  [bhr, np.ones((len(bhr),1))])
         
         print(" took %.2fs" % (time() - start))
+        gc.collect()
     return gan
 
 
