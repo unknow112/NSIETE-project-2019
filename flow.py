@@ -77,7 +77,10 @@ def train(EPOCH_COUNT = 10):
             gan.train_on_batch(blr,  [bhr, np.ones((len(bhr),1))])
         
         print(" took %.2fs" % (time() - start))
-        gc.collect()
+        gctime = time()
+        if (time() - gctime) > 420: 
+            gctime = time()
+            gc.collect()
     return gan
 
 
