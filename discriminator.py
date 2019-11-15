@@ -4,9 +4,8 @@ from tensorflow.keras.activations import tanh
 import numpy as np
 from functools import reduce
 
-class Discriminator(keras.Model):
+class Discriminator(keras.models.Sequential):
     def __init__(self):
-        super(Discriminator, self).__init__()
         self.first_compile = True
         self.trainable = False
 
@@ -38,6 +37,8 @@ class Discriminator(keras.Model):
             Flatten(), # wild guess, try maybe before first dense
             Dense(1,activation=tanh)
         ]
+        super(Discriminator, self).__init__(model)
+
         
     def train_on_batch(self, *args):
         self.trainable = True
@@ -56,9 +57,9 @@ class Discriminator(keras.Model):
         super().compile(*self.compile_args, **self.compile_kwargs)
 
         
-
+"""
 
     def call(self, x):
         return reduce(lambda partial,layer: layer(partial), self.model, x)
-
+"""
     
