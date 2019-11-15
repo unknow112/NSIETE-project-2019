@@ -6,6 +6,7 @@ from functools import reduce
 
 class Discriminator(keras.models.Sequential):
     def __init__(self):
+        super(Discriminator, self).__init__()
         self.first_compile = True
         self.trainable = False
 
@@ -37,7 +38,8 @@ class Discriminator(keras.models.Sequential):
             Flatten(), # wild guess, try maybe before first dense
             Dense(1,activation=tanh)
         ]
-        super(Discriminator, self).__init__(model)
+        for layer in self.model:
+            self.add(layer)
 
         
     def train_on_batch(self, *args):
