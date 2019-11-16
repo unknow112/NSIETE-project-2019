@@ -19,12 +19,12 @@ Input:
 Output: 
     images inside outputdirs
 """
-
+from multiprocessing import Pool
 from resizer import square,resize
 from os import path
 from PIL import Image
-
-
+from collections import namedtuple
+Dir = namedtuple('Dir', ['name','path'])
 
 def open_images(iterator):
     return map(
@@ -36,20 +36,25 @@ def open_images(iterator):
         iterator
     )
 
+class FunctorWrapper():
+    def __init__(self, of):
+        self.output_folders = {**of} 
+    def __call__(self,image):
+        opened_image = open_images([image])
+        squared_image = list(map(lambda x: { **x , 'img_obj': square(x['img_obj']) }, opened_image ))
+        for resolution in self.output_folders:
+            image = list(map(
+                lambda img: {**img, 'img_obj':resize(resolution, img['img_obj'])} , 
+                squared_image
+            ))[0]
+            print("saving image %s in resolution %dpx" %(image['name'],resolution))
+            image['img_obj'].save(path.join(self.output_folders[resolution],image['name']))
 
 def workflow(image_iterator, output_folders):
     for key in output_folders:
         assert output_folders[key][0] == '/'
 
+    image_iterator = list(map(lambda x: Dir(x.name, x.path), image_iterator))
 
-    opened_images = open_images(image_iterator)
-
-    print("squaring....")
-    squared_images = list(map(lambda x: { **x , 'img_obj': square(x['img_obj']) }, opened_images ))
-
-    for resolution in output_folders:
-        resized_images = map(lambda img: {**img, 'img_obj':resize(resolution, img['img_obj'])} , squared_images)
-
-        for image in resized_images:
-            print("saving image %s in resolution %dpx" %(image['name'],resolution))
-            image['img_obj'].save(path.join(output_folders[resolution],image['name']))
+    with Pool(4) as p:
+        p.map(FunctorWrapper(output_folders), image_iterator)

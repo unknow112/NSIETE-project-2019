@@ -1,3 +1,5 @@
+from PIL import Image
+
 def resize(new_size, image):
     w,h = image.size
     assert w == h
