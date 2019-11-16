@@ -1,7 +1,7 @@
 import tensorflow.keras  as keras
-from tensorflow.keras.layers import Conv2D, Dense, PReLU, BatchNormalization, Flatten, add, UpSampling2D, Wrapper
+from tensorflow.keras.layers import Conv2D, Dense, PReLU, BatchNormalization, Flatten, add, UpSampling2D, Activation
 from tensorflow.keras.activations import sigmoid
-
+import numpy as np
 from functools import reduce
 
 
@@ -40,18 +40,27 @@ class Generator(keras.Model):
             BatchNormalization()
         ])
 
+        upsampling_block = lambda :[
+            conv(3,256,1),
+            UpSampling2D(),
+            PReLU()
+        ]
+
         self.model = [
             conv(9,64,1),
             PReLU(),
             SkipAdder([
-                *[residual_block(3,64,1)] * residual_block_count,
+                *[
+                    residual_block(3,64,1)
+                    for _ in range(residual_block_count)
+                 ],
                 conv(3,64,1),
                 BatchNormalization(),                    
             ]),
-            *[conv(3,256,1),
-            UpSampling2D(size=2),
-            PReLU()] * 2,
-            conv(9,3,1)
+            *upsampling_block(),
+            *upsampling_block(),
+            conv(9,3,1),
+            Activation('tanh')
         ]
 
     def call(self, x):

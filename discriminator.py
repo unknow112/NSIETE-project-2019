@@ -1,13 +1,15 @@
 import tensorflow.keras  as keras
 from tensorflow.keras.layers import Conv2D, Dense, LeakyReLU, BatchNormalization, Flatten
-from tensorflow.keras.activations import sigmoid
-
+from tensorflow.keras.activations import tanh
+import numpy as np
 from functools import reduce
 
 class Discriminator(keras.Model):
     def __init__(self):
         super(Discriminator, self).__init__()
-        
+        self.first_compile = True
+        self.trainable = False
+
         conv = lambda K,N,S : Conv2D(
             padding='same',
             filters=N,
@@ -20,7 +22,6 @@ class Discriminator(keras.Model):
             BatchNormalization(),
             LeakyReLU(alpha=0.2)
         ]
-
 
         self.model = [
             conv(3,64,1),
@@ -35,7 +36,29 @@ class Discriminator(keras.Model):
             Dense(1024),
             LeakyReLU(alpha=0.2),
             Flatten(), # wild guess, try maybe before first dense
-            Dense(1,activation=sigmoid)
+            Dense(1,activation=tanh)
         ]
+        
+    def train_on_batch(self, *args):
+        self.trainable = True
+        self.compile()
+        super().train_on_batch(*args)
+        self.trainable = False
+        self.compile()
+
+
+    def compile(self, *args, **kwargs):
+        if self.first_compile:
+            self.compile_args = args
+            self.compile_kwargs = kwargs
+            self.first_compile = False
+
+        super().compile(*self.compile_args, **self.compile_kwargs)
+
+        
+
+
     def call(self, x):
         return reduce(lambda partial,layer: layer(partial), self.model, x)
+
+    
