@@ -30,15 +30,43 @@ Also nVidia offers implementation of such use case as part of [NGX](https://deve
 
 ## Datasets
 
-We are going to create our own image dataset. We download images from photobanks such as [Pixabay](https://pixabay.com), so we will have a lot of different types of images. After that we downscale them and then use them as input for our neural network.
+Traing neural network for image processing is not easy task which require a lot of images, especially if we use GAN.
+We stored all images to our personal [server](http://static.dthi.eu/datasets/) images with links to paths and sources are written below:
+
+- [[div2k/]](http://static.dthi.eu/datasets/div2k/)  **[Source](https://data.vision.ee.ethz.ch/cvl/DIV2K/)**
+- [[Flickr2K/]](http://static.dthi.eu/datasets/Flickr2K/) **[Source](http://cv.snu.ac.kr/research/EDSR/Flickr2K.tar)**  
+- [[dtd/]](http://static.dthi.eu/datasets/dtd/)  **[Source](http://www.robots.ox.ac.uk/~vgg/data/dtd/)**  
+- [[google\_oid/]](http://static.dthi.eu/datasets/google_oid/) (note: only validation sample fully downloaded since whole dataset is 18TB big)  **[Source](https://storage.googleapis.com/openimages/web/index.html)**  
+- [[places205/]](http://static.dthi.eu/datasets/places205/)   **[Source](http://places.csail.mit.edu/index.html)**  
+
+
 
 ## High-Level Solution Proposal
 We personally think that our solution will consist couple of steps:
 
 1. Creating dataset:
- - Download a huge dataset of images from photobank
- - Downscale them to appropriate dimensions (we could also downscale image on multiple levels (like from 1024x1024 to 256x256 and 128x128 images)). Use various lossy compression algorithms
+ - Download a huge images from datasources described above.
+ - Crop images to square
+ - Downscale them to appropriate dimensions (32x32px)
  - create train, test and verify datasets.
 2. Training and engineering the model.
-
 Additionally we would try to use similar approach for GIFs and videos.
+
+## Project Structure
+
+There are many python files in this repository, we provide list with short description to each file:
+
+ - [create_dataset](create_dataset.py) take list of images crop them to square and resize them to 32x32px images
+ - [discriminator](discriminator.py) source code for Discriminator
+ - [fetcher](fetcher.py) image dowloader from [Pixabay](https://pixabay.com)
+ - [flow](flow.py) split image dataset to batches and run epochs on GAN
+ - [gan](gan.py) wrapper for Generator and Discriminator
+ - [generator](generator.py) source code for Generator
+ - [resizer](resizer.py) Utilities for image processing
+
+
+## Evaluation
+
+We basically take generated image and visually check with expected output.
+Then we discuss about what parts/shapes of image were done correctly.
+If we get into point, where we are unable say distinct difference between pictures we use [structural similarity](https://scikit-image.org/docs/dev/api/skimage.metrics.html#skimage.metrics.structural_similarity) to calculate it.
