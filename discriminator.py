@@ -42,9 +42,10 @@ class Discriminator(keras.Model):
     def train_on_batch(self, *args):
         self.trainable = True
         self.compile()
-        super().train_on_batch(*args)
+        retloss = super().train_on_batch(*args)
         self.trainable = False
         self.compile()
+        return retloss
 
 
     def compile(self, *args, **kwargs):
