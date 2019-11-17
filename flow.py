@@ -6,12 +6,11 @@ from gan import Gan
 import gc
 
 def to_batch(a, bsize):
-    if len(a) % bsize == 0:
+    if bsize == 0:
+        return [a.copy()]
+    else
         return np.array_split(a, len(a) // bsize)
-    else:
-        remain = len(a) % bsize
-        return np.array_split(a[:-remain], len(a) // bsize) + [a[-remain:]]
-
+    
 
 def shuffle(a,b):
     assert len(a) == len(b)
@@ -43,23 +42,19 @@ HR_IMAGES = np.array(list(map(
 )))
 
 
-BATCH_SIZE = 20
-SAMPLE_SIZE = len(LR_IMAGES)
 
-
-
-def train(EPOCH_COUNT = 10):
+def train(epoch_count = 10, batch_size = 0, hr_images=HR_IMAGES, lr_images=LR_IMAGES):
     gan = Gan()
     gan.compile()
 
-    for epoch in range(EPOCH_COUNT):
+    for epoch in range(epoch_count):
         print("doing epoch no %d " % epoch, end='',flush=True)
         start = time()
 
-        lr , hr = shuffle(LR_IMAGES, HR_IMAGES)
+        lr , hr = shuffle(lr_images, hr_images)
 
-        lr_batches = to_batch(lr, BATCH_SIZE)
-        hr_batches = to_batch(hr, BATCH_SIZE)
+        lr_batches = to_batch(lr, batch_size)
+        hr_batches = to_batch(hr, batch_size)
 
 
         for blr, bhr in zip(lr_batches,hr_batches):
