@@ -45,7 +45,7 @@ HR_IMAGES = np.array(list(map(
 
 def train(*, epoch_count, batch_size, hr_images, lr_images):
     """if you set batch size to 0, it will mean that there will be only one batch"""
-    
+
     gan = Gan()
     gan.compile()
 
@@ -63,17 +63,20 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
             print('!', end='', flush=True)
             bsr = gan.g.predict(blr)
 
-            gan.d.train_on_batch(
-                np.concatenate([bhr, bsr]),
-                np.concatenate([
-                    np.ones((len(bhr),1)), 
-                    np.full((len(bhr),1), -1)
-                ])
+            loss_d_fake = gan.d.train_on_batch(
+                bsr,
+                np.full((len(bsr),1), -1)
+            )
+            
+            loss_d_real = gan.d.train_on_batch(
+                bhr,
+                np.ones((len(bhr),1))
             )
 
-            gan.train_on_batch(blr,  [bhr, np.ones((len(bhr),1))])
-        
-        print(" took %.2fs" % (time() - start))
+            loss_gan = gan.train_on_batch(blr,  [bhr, np.ones((len(bhr),1))])
+        total = time() - start
+        print(" took %.2fs" % total)
+        print({'epoch_no': epoch, 'loss_d_fake': loss_d_fake, 'loss_d_real': loss_d_real, 'loss_gan': loss_gan, 'time': "%.2f"%total })
         gctime = time()
         if (time() - gctime) > 420: 
             gctime = time()
