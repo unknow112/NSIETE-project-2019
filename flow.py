@@ -63,20 +63,18 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
             print('!', end='', flush=True)
             bsr = gan.g.predict(blr)
 
-            loss_d_fake = gan.d.train_on_batch(
-                bsr,
-                np.full((len(bsr),1), -1)
+            gan.d.train_on_batch(
+                np.concatenate([bhr, bsr]),
+                np.concatenate([
+                    np.ones((len(bhr),1)), 
+                    np.full((len(bhr),1), -1)
+                ])
             )
             
-            loss_d_real = gan.d.train_on_batch(
-                bhr,
-                np.ones((len(bhr),1))
-            )
-
             loss_gan = gan.train_on_batch(blr,  [bhr, np.ones((len(bhr),1))])
         total = time() - start
         print(" took %.2fs" % total)
-        print({'epoch_no': epoch, 'loss_d_fake': loss_d_fake, 'loss_d_real': loss_d_real, 'loss_gan': loss_gan, 'time': "%.2f"%total })
+        print({'epoch_no': epoch, 'loss_gan': loss_gan, 'time': "%.2fs"%total })
         gctime = time()
         if (time() - gctime) > 420: 
             gctime = time()
