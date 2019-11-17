@@ -72,10 +72,9 @@ There are many python and other important files in this repository, we provide l
  - [resizer](resizer.py) Utilities for image processing
  - [main](main.py) console runner for neural network
 
-**Jupyter Notebooks and documents**
+**Jupyter Notebooks**
  - [analyze](analyze.ipynb) Jupyter notebook with data analysis
  - [dataset_preparation](dataset_preparation.ipynb) describes preparation of data
- - [baseline_model](baseline_model.md) describing implemented model
  - [model_training](model_training.ipynb) describes how to train model
 
 **Other Files**
