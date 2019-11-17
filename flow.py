@@ -43,7 +43,7 @@ HR_IMAGES = np.array(list(map(
 
 
 
-def train(epoch_count = 10, batch_size = 0, hr_images=HR_IMAGES, lr_images=LR_IMAGES):
+def train(*, epoch_count, batch_size, hr_images, lr_images):
     gan = Gan()
     gan.compile()
 
