@@ -56,6 +56,7 @@ Additionally we would try to use similar approach for GIFs and videos.
 
 There are many python and other important files in this repository, we provide list with short description to each file:
 
+**Python Files**
  - [create_dataset](create_dataset.py) take list of images crop them to square and resize them to 32x32px images
  - [discriminator](discriminator.py) source code for Discriminator
  - [fetcher](fetcher.py) image dowloader from [Pixabay](https://pixabay.com)
@@ -63,9 +64,14 @@ There are many python and other important files in this repository, we provide l
  - [gan](gan.py) wrapper for Generator and Discriminator
  - [generator](generator.py) source code for Generator
  - [resizer](resizer.py) Utilities for image processing
+ - [main](main.py) console runner for neural network
+
+**Jupyter Notebooks**
  - [analyze](analyze.ipynb) Jupyter notebook with data analysis
  - [dataset_preparation](dataset_preparation.ipynb) describes preparation of data
- - [requirements](requirements.txt) list of required libraries  
+
+**Other Files**
+ - [requirements](requirements.txt) list of required libraries
 
 
 ## Evaluation
