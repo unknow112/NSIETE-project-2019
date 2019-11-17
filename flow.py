@@ -44,6 +44,8 @@ HR_IMAGES = np.array(list(map(
 
 
 def train(*, epoch_count, batch_size, hr_images, lr_images):
+    """if you set batch size to 0, it will mean that there will be only one batch"""
+    
     gan = Gan()
     gan.compile()
 
