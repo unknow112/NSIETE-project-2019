@@ -8,7 +8,7 @@ import gc
 def to_batch(a, bsize):
     if bsize == 0:
         return [a.copy()]
-    else
+    else:
         return np.array_split(a, len(a) // bsize)
     
 
