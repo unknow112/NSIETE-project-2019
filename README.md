@@ -54,7 +54,7 @@ Additionally we would try to use similar approach for GIFs and videos.
 
 ## Project Structure
 
-There are many python files in this repository, we provide list with short description to each file:
+There are many python and other important files in this repository, we provide list with short description to each file:
 
  - [create_dataset](create_dataset.py) take list of images crop them to square and resize them to 32x32px images
  - [discriminator](discriminator.py) source code for Discriminator
@@ -63,6 +63,9 @@ There are many python files in this repository, we provide list with short descr
  - [gan](gan.py) wrapper for Generator and Discriminator
  - [generator](generator.py) source code for Generator
  - [resizer](resizer.py) Utilities for image processing
+ - [analyze](analyze.ipynb) Jupyter notebook with data analysis
+ - [dataset_preparation](dataset_preparation.ipynb) describes preparation of data
+ - [requirements](requirements.txt) list of required libraries  
 
 
 ## Evaluation
