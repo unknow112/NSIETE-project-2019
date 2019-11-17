@@ -50,6 +50,12 @@ We personally think that our solution will consist couple of steps:
  - Downscale them to appropriate dimensions (32x32px)
  - create train, test and verify datasets.
 2. Training and engineering the model.
+ - Our main inspiration was paper [Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network](https://arxiv.org/pdf/1609.04802.pdf) which we used as first step for our solution.
+ - Instead of VGG loss function described in paper we used [Wasserstein](https://arxiv.org/pdf/1701.07875.pdf) for generator and discriminator
+ - Used tangens hyperbolic as activation function for discriminator
+
+ ![alt text](model.png "Model")
+
 Additionally we would try to use similar approach for GIFs and videos.
 
 ## Project Structure
