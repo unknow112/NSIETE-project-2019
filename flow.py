@@ -4,6 +4,7 @@ import numpy as np
 from os import scandir,path
 from gan import Gan
 import gc
+from utils import generator
 
 def to_batch(a, bsize):
     if bsize == 0:
@@ -49,38 +50,40 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
     gan = Gan()
     gan.compile()
 
-    for epoch in range(epoch_count):
-        print("doing epoch no %d " % epoch, end='',flush=True)
-        start = time()
+    # for epoch in range(epoch_count):
+    #     print("doing epoch no %d " % epoch, end='',flush=True)
+    #     start = time()
 
-        lr , hr = shuffle(lr_images, hr_images)
+    gan.fit_generator(generator(lr_images,hr_images,batch_size), epochs=epoch_count, steps_per_epoch=len(lr_images), validation_data=generator(lr_images,hr_images,batch_size*2))
 
-        lr_batches = to_batch(lr, batch_size)
-        hr_batches = to_batch(hr, batch_size)
+        # lr , hr = shuffle(lr_images, hr_images)
+
+        # lr_batches = to_batch(lr, batch_size)
+        # hr_batches = to_batch(hr, batch_size)
 
 
-        for blr, bhr in zip(lr_batches,hr_batches):
-            print('!', end='', flush=True)
-            bsr = gan.g.predict(blr)
+        # for blr, bhr in zip(lr_batches,hr_batches):
+        #     print('!', end='', flush=True)
+        #     bsr = gan.g.predict(blr)
 
-            loss_d_fake = gan.d.train_on_batch(
-                bsr,
-                np.full((len(bsr),1), -1)
-            )
+        #     loss_d_fake = gan.d.train_on_batch(
+        #         bsr,
+        #         np.full((len(bsr),1), -1)
+        #     )
             
-            loss_d_real = gan.d.train_on_batch(
-                bhr,
-                np.ones((len(bhr),1))
-            )
+        #     loss_d_real = gan.d.train_on_batch(
+        #         bhr,
+        #         np.ones((len(bhr),1))
+        #     )
 
-            loss_gan = gan.train_on_batch(blr,  [bhr, np.ones((len(bhr),1))])
-        total = time() - start
-        print(" took %.2fs" % total)
-        print({'epoch_no': epoch, 'loss_d_fake': loss_d_fake, 'loss_d_real': loss_d_real, 'loss_gan': loss_gan, 'time': "%.2fs"%total })
-        gctime = time()
-        if (time() - gctime) > 420: 
-            gctime = time()
-            gc.collect()
+        #     loss_gan = gan.train_on_batch(blr,  [bhr, np.ones((len(bhr),1))])
+        # total = time() - start
+        # print(" took %.2fs" % total)
+        # print({'epoch_no': epoch, 'loss_d_fake': loss_d_fake, 'loss_d_real': loss_d_real, 'loss_gan': loss_gan, 'time': "%.2fs"%total })
+        # gctime = time()
+        # if (time() - gctime) > 420: 
+        #     gctime = time()
+        #     gc.collect()
     return gan
 
 
