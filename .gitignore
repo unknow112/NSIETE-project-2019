@@ -16,3 +16,4 @@ __pycache__/
 *.tgz
 *.png
 *.jpg
+!model.png

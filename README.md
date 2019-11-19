@@ -50,12 +50,19 @@ We personally think that our solution will consist couple of steps:
  - Downscale them to appropriate dimensions (32x32px)
  - create train, test and verify datasets.
 2. Training and engineering the model.
+ - Our main inspiration was paper [Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network](https://arxiv.org/pdf/1609.04802.pdf) which we used as first step for our solution.
+ - Instead of VGG loss function described in paper we used [Wasserstein](https://arxiv.org/pdf/1701.07875.pdf) for generator and discriminator
+ - Used tangens hyperbolic as activation function for discriminator
+
+ ![alt text](model.png "Model")
+
 Additionally we would try to use similar approach for GIFs and videos.
 
 ## Project Structure
 
-There are many python files in this repository, we provide list with short description to each file:
+There are many python and other important files in this repository, we provide list with short description to each file:
 
+**Python Files**
  - [create_dataset](create_dataset.py) take list of images crop them to square and resize them to 32x32px images
  - [discriminator](discriminator.py) source code for Discriminator
  - [fetcher](fetcher.py) image dowloader from [Pixabay](https://pixabay.com)
@@ -63,6 +70,15 @@ There are many python files in this repository, we provide list with short descr
  - [gan](gan.py) wrapper for Generator and Discriminator
  - [generator](generator.py) source code for Generator
  - [resizer](resizer.py) Utilities for image processing
+ - [main](main.py) console runner for neural network
+
+**Jupyter Notebooks**
+ - [analyze](analyze.ipynb) Jupyter notebook with data analysis
+ - [dataset_preparation](dataset_preparation.ipynb) describes preparation of data
+ - [model_training](model_training.ipynb) describes how to train model
+
+**Other Files**
+ - [requirements](requirements.txt) list of required libraries for pip
 
 
 ## Evaluation
