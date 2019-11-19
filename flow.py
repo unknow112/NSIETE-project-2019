@@ -47,6 +47,7 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
     """if you set batch size to 0, it will mean that there will be only one batch"""
 
     gan = Gan()
+    gan.build()
     gan.compile()
 
     for epoch in range(epoch_count):
@@ -63,6 +64,8 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
             print('!', end='', flush=True)
             bsr = gan.g.predict(blr)
 
+
+            gan.d.trainable=True
             loss_d_fake = gan.d.train_on_batch(
                 bsr,
                 np.full((len(bsr),1), -1)
@@ -72,6 +75,7 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
                 bhr,
                 np.ones((len(bhr),1))
             )
+            gan.d.trainable=False
 
             loss_gan = gan.train_on_batch(blr,  [bhr, np.ones((len(bhr),1))])
         total = time() - start
