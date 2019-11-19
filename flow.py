@@ -47,7 +47,7 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
     """if you set batch size to 0, it will mean that there will be only one batch"""
 
     gan = Gan()
-    gan.build((None, 32,32,3))
+    #gan.build((None, 32,32,3))
     gan.compile()
 
     for epoch in range(epoch_count):
