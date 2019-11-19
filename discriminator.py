@@ -7,8 +7,6 @@ from functools import reduce
 class Discriminator(keras.Model):
     def __init__(self):
         super(Discriminator, self).__init__()
-        self.first_compile = True
-        self.trainable = False
 
         conv = lambda K,N,S : Conv2D(
             padding='same',
@@ -39,24 +37,6 @@ class Discriminator(keras.Model):
             Dense(1,activation=tanh)
         ]
         
-    def train_on_batch(self, *args):
-        self.trainable = True
-        self.compile()
-        super().train_on_batch(*args)
-        self.trainable = False
-        self.compile()
-
-
-    def compile(self, *args, **kwargs):
-        if self.first_compile:
-            self.compile_args = args
-            self.compile_kwargs = kwargs
-            self.first_compile = False
-
-        super().compile(*self.compile_args, **self.compile_kwargs)
-
-        
-
 
     def call(self, x):
         return reduce(lambda partial,layer: layer(partial), self.model, x)

@@ -17,7 +17,9 @@ class Gan(keras.Model):
         dis_loss = tfgan.losses.wargs.wasserstein_discriminator_loss
 
         self.g.compile(optimizer=opt,loss=gen_loss)
+        self.d.trainable=True
         self.d.compile(optimizer=opt,loss=dis_loss)
+        self.d.trainable=False
         super().compile(loss=[gen_loss, dis_loss], optimizer=opt)
 
     def call(self, x):
