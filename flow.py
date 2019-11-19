@@ -54,7 +54,7 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
     #     print("doing epoch no %d " % epoch, end='',flush=True)
     #     start = time()
 
-    gan.fit_generator(generator(lr_images,hr_images,batch_size), epochs=epoch_count, steps_per_epoch=len(lr_images))
+    gan.d.fit_generator(generator(lr_images,hr_images,batch_size), epochs=epoch_count, steps_per_epoch=len(lr_images)//batch_size)
 
         # lr , hr = shuffle(lr_images, hr_images)
 
