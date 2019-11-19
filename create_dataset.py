@@ -19,12 +19,15 @@ Input:
 Output: 
     images inside outputdirs
 """
+
 from multiprocessing import Pool
 from resizer import square,resize
 from os import path
 from PIL import Image
 from collections import namedtuple
-Dir = namedtuple('Dir', ['name','path'])
+from itertools import chain
+
+Dir = namedtuple('Dir', ['name','path','prefix'])
 
 def open_images(iterator):
     return map(
@@ -50,11 +53,32 @@ class FunctorWrapper():
             print("saving image %s in resolution %dpx" %(image['name'],resolution))
             image['img_obj'].save(path.join(self.output_folders[resolution],image['name']))
 
-def workflow(image_iterator, output_folders):
+def workflow(image_iterators, output_folders):
+    """
+    image_iterators = [
+        ...
+        (iterator, str::name_prefix),
+        ...
+    ]
+    output_folders = {
+        ...
+        int::squared_output_resolution : str::full_output_folder
+        ...
+    }
+    """
+
     for key in output_folders:
         assert output_folders[key][0] == '/'
 
-    image_iterator = list(map(lambda x: Dir(x.name, x.path), image_iterator))
+    concatenated_iterators = list(map(
+        lambda ITER, PREF: list(map(
+            lambda x: Dir(x.name, x.path, PREF),
+            ITER
+        )),
+        image_iterators
+    ))
+
+    image_iterator = list(map())
 
     with Pool(4) as p:
         p.map(FunctorWrapper(output_folders), image_iterator)
