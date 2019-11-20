@@ -32,7 +32,10 @@ class FunctorWrapper():
         self.output_folders = {**of} 
     def __call__(self,image):
         #opened_image = open_images([image])
-        opened_image = Image.open(image.path)
+        try:
+            opened_image = Image.open(image.path)
+        except OSError:
+            return image.path
         #squared_image =list(map(lambda x: { **x , 'img_obj': square(x['img_obj']) }, opened_image ))
         squared_image = square(opened_image)
 
@@ -74,4 +77,7 @@ def workflow(image_iterators, output_folders):
     ))))
 
     with Pool(4) as p:
-        p.map(FunctorWrapper(output_folders), concatenated_iterators)
+        status = p.map(FunctorWrapper(output_folders), concatenated_iterators)
+
+    with open("bad_files.log", "w") as f:
+        f.writelines(list(filter(lambda X: type(X) == str, status)))
