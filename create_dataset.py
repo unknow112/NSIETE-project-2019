@@ -43,7 +43,7 @@ class FunctorWrapper():
             #))[0]
             resized_image = resize(resolution, squared_image)
             save_path = self.output_folders[resolution]
-            save_name = '_'.join(image.prefix,image.name)
+            save_name = '_'.join([image.prefix,image.name])
             print("saving image %s in resolution %dpx" %(save_name,resolution))
             resized_image.save(path.join(save_path, save_name))
 
