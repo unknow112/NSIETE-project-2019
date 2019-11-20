@@ -16,34 +16,17 @@ from itertools import chain
 
 Dir = namedtuple('Dir', ['name','path','prefix'])
 
-#def open_images(iterator):
-    #return map(
-    #    lambda x: { 
-    #        'path': x.path,
-    #        'name': x.name,
-    #        'img_obj': Image.open(x.path),
-    #        'prefix': x.prefix
-    #    },
-    #    iterator
-    #)
-
 class FunctorWrapper():
     def __init__(self, of):
         self.output_folders = {**of} 
     def __call__(self,image):
-        #opened_image = open_images([image])
         try:
             opened_image = Image.open(image.path)
         except OSError:
             return image.path
-        #squared_image =list(map(lambda x: { **x , 'img_obj': square(x['img_obj']) }, opened_image ))
         squared_image = square(opened_image)
 
         for resolution in self.output_folders:
-            #image = list(map(
-            #    lambda img: {**img, 'img_obj':resize(resolution, img['img_obj'])} , 
-            #    squared_image
-            #))[0]
             resized_image = resize(resolution, squared_image)
             save_path = self.output_folders[resolution]
             save_name = '_'.join([image.prefix,image.name])
