@@ -2,20 +2,7 @@
 take Images iterator and output folders, crop (find bigest centered square) 
 and resize images
 
-use function `workflow(image_iterator, output_folders)`
-
-Input: 
-    image_iterator: iterator of objects where `path` member is full file 
-        path, `name` member is filename and every object represents valid 
-        image. See `os.scandir`
-
-    output_folders: dictionary like:
-    ```
-    {
-        int squared_output_resolution : str  full_output_folder
-    }
-    ```
-
+use function `workflow(...)`
 Output: 
     images inside outputdirs
 """
@@ -30,28 +17,36 @@ from itertools import chain
 Dir = namedtuple('Dir', ['name','path','prefix'])
 
 def open_images(iterator):
-    return map(
-        lambda x: { 
-            'path': x.path,
-            'name': x.name,
-            'img_obj': Image.open(x.path)
-        },
-        iterator
-    )
+    #return map(
+    #    lambda x: { 
+    #        'path': x.path,
+    #        'name': x.name,
+    #        'img_obj': Image.open(x.path),
+    #        'prefix': x.prefix
+    #    },
+    #    iterator
+    #)
+    return Image.open(x.path)
 
 class FunctorWrapper():
     def __init__(self, of):
         self.output_folders = {**of} 
     def __call__(self,image):
-        opened_image = open_images([image])
-        squared_image = list(map(lambda x: { **x , 'img_obj': square(x['img_obj']) }, opened_image ))
+        #opened_image = open_images([image])
+        opened_image = open_images(image)
+        #squared_image =list(map(lambda x: { **x , 'img_obj': square(x['img_obj']) }, opened_image ))
+        squared_image = square(opened_image)
+
         for resolution in self.output_folders:
-            image = list(map(
-                lambda img: {**img, 'img_obj':resize(resolution, img['img_obj'])} , 
-                squared_image
-            ))[0]
-            print("saving image %s in resolution %dpx" %(image['name'],resolution))
-            image['img_obj'].save(path.join(self.output_folders[resolution],image['name']))
+            #image = list(map(
+            #    lambda img: {**img, 'img_obj':resize(resolution, img['img_obj'])} , 
+            #    squared_image
+            #))[0]
+            resized_image = resize(resolution, squared_image)
+            save_path = self.output_folders[resolution]
+            save_name = '_'.join(image.prefix,image.name)
+            print("saving image %s in resolution %dpx" %(save_name,resolution))
+            resized_image.save(path.join(save_path, save_name))
 
 def workflow(image_iterators, output_folders):
     """
@@ -70,15 +65,14 @@ def workflow(image_iterators, output_folders):
     for key in output_folders:
         assert output_folders[key][0] == '/'
 
-    concatenated_iterators = list(map(
-        lambda ITER, PREF: list(map(
-            lambda x: Dir(x.name, x.path, PREF),
-            ITER
+
+    concatenated_iterators = list(chain(*list(map(
+        lambda TUPLE: list(map(
+            lambda x: Dir(x.name, x.path, TUPLE[1]),
+            TUPLE[0]
         )),
         image_iterators
-    ))
-
-    image_iterator = list(map())
+    ))))
 
     with Pool(4) as p:
-        p.map(FunctorWrapper(output_folders), image_iterator)
+        p.map(FunctorWrapper(output_folders), concatenated_iterators)
