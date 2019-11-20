@@ -22,9 +22,10 @@ class FunctorWrapper():
     def __call__(self,image):
         try:
             opened_image = Image.open(image.path)
+            squared_image = square(opened_image)
+
         except OSError:
             return image.path
-        squared_image = square(opened_image)
 
         for resolution in self.output_folders:
             resized_image = resize(resolution, squared_image)
