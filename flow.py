@@ -1,5 +1,6 @@
 from time import time
 from skimage.io import imread, imsave
+from skimage.color import gray2rgb
 import numpy as np
 from os import scandir,path
 from gan import Gan
@@ -33,6 +34,8 @@ assert LR_IMAGES == HR_IMAGES
 def load_and_normalize(image):
     res = imread(image)
     res = (res - 127.5) / 127.5
+    if len(res.shape) == 2:
+        res = gray2rgb(res)
     return res
 
 LR_IMAGES = np.array(list(map(
