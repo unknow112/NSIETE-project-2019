@@ -9,8 +9,13 @@ import gc
 def to_batch(a, bsize):
     if bsize == 0:
         return [a.copy()]
+    bcount = len(a) // bsize
+    if len(a) % bsize == 0:
+        return np.array_split(a, bcount)
     else:
-        return np.array_split(a, len(a) // bsize)
+        wholepart = bcount * bsize
+        return np.array_split(a[:wholepart], bcount) + [a[wholepart:]]
+        
     
 
 def is_img(x):
