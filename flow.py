@@ -12,6 +12,10 @@ def to_batch(a, bsize):
         return np.array_split(a, len(a) // bsize)
     
 
+def is_img(x):
+    return x.name.split('.')[-1] in {'png','jpg'}
+    
+
 def shuffle(a,b):
     assert len(a) == len(b)
     p = np.random.permutation(len(a))
@@ -21,8 +25,8 @@ def shuffle(a,b):
 LR_DIR='inputdata'
 HR_DIR='outputdata'
 
-LR_IMAGES= sorted(map(lambda x: x.name,filter(lambda x: 'png' in x.name ,scandir(path=LR_DIR))))
-HR_IMAGES= sorted(map(lambda x: x.name,filter(lambda x: 'png' in x.name ,scandir(path=HR_DIR))))
+LR_IMAGES= sorted(map(lambda x: x.name,filter(is_img ,scandir(path=LR_DIR))))
+HR_IMAGES= sorted(map(lambda x: x.name,filter(is_img ,scandir(path=HR_DIR))))
 assert LR_IMAGES == HR_IMAGES
 
 

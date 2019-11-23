@@ -8,15 +8,16 @@ def resize(new_size, image):
 
 def get_crop_area(width, height):
     assert height != width
-    shift = abs((width - height)) // 2
- 
+    shift = abs(width - height) // 2
+    square = min(width, height)
+
+    rest = shift + square
+
     if width > height:
-        rest = width - shift
-        return shift, 0, rest, height
+        return shift, 0, rest, square
 
     if height > width:
-        rest = height - shift
-        return 0, shift, width, rest
+        return 0, shift, square, rest
 
 
 def square(img):
