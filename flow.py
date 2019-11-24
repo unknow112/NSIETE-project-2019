@@ -2,22 +2,11 @@ from time import time
 from skimage.io import imread, imsave
 from skimage.color import gray2rgb
 import numpy as np
-from os import scandir,path
+from os import scandir
 from gan import Gan
 import gc
 from parallel_loader import ParallelLoader
 import json
-
-
-def to_batch(a, bsize):
-    if bsize == 0:
-        return [a.copy()]
-    bcount = len(a) // bsize
-    if len(a) % bsize == 0:
-        return np.array_split(a, bcount)
-    else:
-        wholepart = bcount * bsize
-        return np.array_split(a[:wholepart], bcount) + [a[wholepart:]]
         
     
 def is_img(x):

@@ -2,6 +2,16 @@ import multiprocessing as mp
 import numpy as np
 
 
+def to_batch(a, bsize):
+    if bsize == 0:
+        return [a.copy()]
+    bcount = len(a) // bsize
+    if len(a) % bsize == 0:
+        return np.array_split(a, bcount)
+    else:
+        wholepart = bcount * bsize
+        return np.array_split(a[:wholepart], bcount) + [a[wholepart:]]
+
 def shuffle(a,b):
     assert len(a) == len(b)
     p = np.random.permutation(len(a))
