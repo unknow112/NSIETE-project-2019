@@ -86,6 +86,8 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
         if (time() - gctime) > 420: 
             gctime = time()
             gc.collect()
+    
+    sequencer.join()
     return gan
 
 

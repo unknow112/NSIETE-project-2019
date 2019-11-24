@@ -29,8 +29,12 @@ class ParallelLoader():
         self.prepared = mp.Queue(prepare)
         self.epoch_count = epoch_count
         self.loader = loader_f
-        self.task = mp.Process(ParallelLoader.prepare, args=(self,))
+        self.task = mp.Process(target=ParallelLoader.prepare, args=(self,))
+        self.task.start()
     
+    def join(self):
+        self.task.join()
+
     def __iter__(self):
         return self
 
