@@ -1,5 +1,15 @@
 import multiprocessing as mp
 import numpy as np
+from skimage.io import imread
+from skimage.color import gray2rgb
+
+
+def load_and_normalize(image):
+    res = imread(image)
+    res = (res - 127.5) / 127.5
+    if len(res.shape) == 2:
+        res = gray2rgb(res)
+    return res
 
 
 def to_batch(a, bsize):
@@ -12,23 +22,25 @@ def to_batch(a, bsize):
         wholepart = bcount * bsize
         return np.array_split(a[:wholepart], bcount) + [a[wholepart:]]
 
+
 def shuffle(a,b):
     assert len(a) == len(b)
     p = np.random.permutation(len(a))
     return a[p], b[p]
+
 
 class EndItem():
     pass
 
 
 class ParallelLoader():
-    def __init__(self, *,x_template, y_template, batch_size, prepare=10, epoch_count ,loader_f):
+    def __init__(self, *,x_template, y_template, batch_size, prepare=10, epoch_count):
         self.x = x_template
         self.y = y_template
         self.bsize = batch_size
-        self.prepared = mp.Queue(prepare)
         self.epoch_count = epoch_count
-        self.loader = loader_f
+        self.mp_manager = mp.Manager()
+        self.prepared = self.mp_manager.Queue(prepare)
         self.task = mp.Process(target=ParallelLoader.prepare, args=(self,))
         self.task.start()
     
@@ -45,7 +57,6 @@ class ParallelLoader():
         else:
             return next
 
-
     def prepare(self):
         for epoch in range(self.epoch_count):
             self.x , self.y = shuffle(self.x, self.y)
@@ -53,14 +64,9 @@ class ParallelLoader():
             x_batches_t = to_batch(self.x, self.bsize)
             y_batches_t = to_batch(self.y, self.bsize)
 
-            for batch,(xbt, ybt) in enumerate(zip(x_batches, y_batches)):
-                xb = np.array(list(map(self.loader, xbt)))
-                yb = np.array(list(map(self.loader, ybt)))
+            for batch,(xbt, ybt) in enumerate(zip(x_batches_t, y_batches_t)):
+                xb = np.array(list(map(load_and_normalize, xbt)))
+                yb = np.array(list(map(load_and_normalize, ybt)))
                 self.prepared.put((epoch,batch,xb,yb))
         
         self.prepared.put(EndItem)
-
-        
-
-
-
