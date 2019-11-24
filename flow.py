@@ -39,7 +39,6 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
         y_template = hr_images, 
         batch_size = batch_size, 
         epoch_count = epoch_count,
-        loader_f = load_and_normalize
     )
 
     for epoch, bnumber, blr, bhr in sequencer:
@@ -66,9 +65,9 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
         print(json.dumps({
             'epoch_no': epoch, 
             'batch_no': bnumber, 
-            'loss_d_fake': loss_d_fake, 
-            'loss_d_real': loss_d_real, 
-            'loss_gan': loss_gan, 
+            'loss_d_fake': str(loss_d_fake), 
+            'loss_d_real': str(loss_d_real), 
+            'loss_gan': str(loss_gan), 
             'time': "%.2fs"%total 
         }))
         if (time() - gctime) > 420: 
