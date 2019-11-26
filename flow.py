@@ -59,7 +59,7 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
         )
         gan.d.trainable=False
 
-        loss_gan = gan.train_on_batch(blr,  [bhr, np.ones((len(bhr),1))])
+        loss_gan = gan.train_on_batch(blr,  np.ones((len(bhr),1)))
 
         total = time() - start
         print(json.dumps({
