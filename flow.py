@@ -50,7 +50,7 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
         gan.d.trainable=True
         loss_d_fake = gan.d.train_on_batch(
             bsr,
-            np.full((len(bsr),1), -1)
+            np.zeros((len(bsr),1))
         )
         
         loss_d_real = gan.d.train_on_batch(
