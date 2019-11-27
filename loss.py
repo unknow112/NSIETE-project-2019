@@ -4,9 +4,7 @@ import tensorflow.keras.backend as kb
 vgg = VGG19()
 
 def content_loss(yp, yt): #unfininshed
-    vyp = vgg(yp)
-    vyt = vgg(yt)
-    return kb.sqrt(kb.sum(kb.square(vyp - vyt)))
+    return kb.sqrt(kb.sum(kb.square(vgg(yp) - vgg(yt))))
 
 
 def adversarial_loss(yp,_):
