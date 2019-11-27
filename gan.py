@@ -14,8 +14,8 @@ class Gan(keras.Model):
     def compile(self, **kwargs):
         opt = keras.optimizers.Adam(0.001, 0.5)
 
-        self.d.compile(optimizer=opt,loss=loss.content_loss)
-        super().compile(loss=loss.adversarial_loss, optimizer=opt)
+        self.d.compile(optimizer=opt,loss=loss.adversarial_loss)
+        super().compile(loss=loss.content_loss, optimizer=opt)
         
 
 
