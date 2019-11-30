@@ -5,7 +5,7 @@ import tensorflow_gan as tfgan
 import loss
 
 class Gan(keras.Model):
-    def __init__(self, residual_block_count=16):
+    def __init__(self):
         super(Gan, self).__init__()
 
         self.g = Generator()
