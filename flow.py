@@ -11,6 +11,8 @@ def is_img(x):
     return x.name.split('.')[-1] in {'png','jpg'}
     
 
+
+
 LR_DIR='inputdata'
 HR_DIR='outputdata'
 
@@ -26,13 +28,14 @@ assert all(map(
 LR_IMAGES = np.array(list(map(lambda x: x.path, LR_IMAGES)))
 HR_IMAGES = np.array(list(map(lambda x: x.path, HR_IMAGES)))
 
-
-
-def train(*, epoch_count, batch_size, hr_images, lr_images):
-    """if you set batch size to 0, it will mean that there will be only one batch"""
-
+def mkmodel():
     gan = Gan()
     gan.compile()
+    return gan
+
+def train(*,gan,  epoch_count, batch_size, hr_images, lr_images):
+    """if you set batch size to 0, it will mean that there will be only one batch"""
+
 
     sequencer = ParallelLoader(
         x_template = lr_images, 
@@ -69,7 +72,7 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
             'loss_d_real': str(loss_d_real), 
             'loss_gan': str(loss_gan), 
             'time': "%.2fs"%total 
-        }))
+        }), flush=True)
         if (time() - gctime) > 420: 
             gctime = time()
             gc.collect()

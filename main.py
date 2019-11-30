@@ -3,12 +3,17 @@ from sys import argv
 
 def main():
   assert len(argv[1]) > 0
-  model = train(
-    epoch_count=2,
-    batch_size=8,
-    hr_images=HR_IMAGES[:100],
-    lr_images=LR_IMAGES[:100]
-  )
+  model = mkmodel()
+  try:
+    train(
+      gan=model,
+      epoch_count=100,
+      batch_size=64,
+      hr_images=HR_IMAGES[:50000],
+      lr_images=LR_IMAGES[:50000]
+    )
+  except KeyboardInterrupt:
+    pass
   model.save_weights(argv[1])
 	
   
