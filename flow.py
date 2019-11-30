@@ -1,7 +1,9 @@
 from time import time
+from loss import GeneratorLoss
 import numpy as np
 from os import scandir
-from gan import Gan
+from generator import Generator
+from discriminator import Discriminator
 import gc
 from parallel_loader import ParallelLoader
 import json
@@ -29,45 +31,43 @@ HR_IMAGES = np.array(list(map(lambda x: x.path, HR_IMAGES)))
 
 
 def train(*, epoch_count, batch_size, hr_images, lr_images):
-    """if you set batch size to 0, it will mean that there will be only one batch"""
+    """if you set batch size to 0, the batch size will be of whole training dataset"""
 
-    gan = Gan()
-    gan.compile()
+    dis = Discriminator()
+    dis.compile(loss="binary_crossentropy")
+
+    gen = Generator()
+    gen.compile(loss=GeneratorLoss(dis))
 
     sequencer = ParallelLoader(
-        x_template = lr_images, 
-        y_template = hr_images, 
-        batch_size = batch_size, 
+        x_template = lr_images,
+        y_template = hr_images,
+        batch_size = batch_size,
         epoch_count = epoch_count,
     )
 
+    gctime = time()
     for epoch, bnumber, blr, bhr in sequencer:
         start = time()
-        gctime = time()
-            
-        bsr = gan.g.predict(blr)
 
-        gan.d.trainable=True
-        loss_d_fake = gan.d.train_on_batch(
-            bsr,
-            np.zeros((len(bsr),1))
-        )
-        
-        loss_d_real = gan.d.train_on_batch(
-            bhr,
-            np.ones((len(bhr),1))
-        )
-        gan.d.trainable=False
+        bsr = gen.predict(blr)
 
-        loss_gan = gan.train_on_batch(blr,  np.ones((len(bhr),1)))
+        loss_d = dis.train_on_batch(
+            np.concatenate([bsr, bhr]),
+            np.concatenate([
+                np.full((len(bsr), 1), 0),
+                np.full((len(bhr), 1), 1)
+            ])
+        )
+
+        loss_g = gen.train_on_batch(blr, bhr)
 
         total = time() - start
         print(json.dumps({
             'epoch_no': epoch, 
             'batch_no': bnumber, 
-            'loss_d_fake': str(loss_d_fake), 
-            'loss_d_real': str(loss_d_real), 
-            'loss_gan': str(loss_gan), 
+            'loss_d': str(loss_d),
+            'loss_g': str(loss_g),
             'time': "%.2fs"%total 
         }))
         if (time() - gctime) > 420: 
@@ -75,7 +75,7 @@ def train(*, epoch_count, batch_size, hr_images, lr_images):
             gc.collect()
     
     sequencer.join()
-    return gan
+    return dis, gen
 
 
 

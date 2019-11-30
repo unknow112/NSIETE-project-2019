@@ -3,7 +3,7 @@ from sys import argv
 
 def main():
   assert len(argv[1]) > 0
-  model = train(epoch_count=10, batch_size=20, hr_images=HR_IMAGES, lr_images=LR_IMAGES)
+  model = train(epoch_count=2, batch_size=8, hr_images=HR_IMAGES[:100], lr_images=LR_IMAGES[:100])
   model.save_weights(argv[1])
 	
   
