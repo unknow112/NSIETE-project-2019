@@ -35,7 +35,7 @@ def mkmodel():
 
 def train(*,gan,  epoch_count, batch_size, hr_images, lr_images):
     """if you set batch size to 0, it will mean that there will be only one batch"""
-
+    print("ec: %d, bs: %d, ds: %d" % (epoch_count, batch_size, len(hr_images) ))
 
     sequencer = ParallelLoader(
         x_template = lr_images, 
