@@ -1,5 +1,5 @@
-from keras.applications.vgg19 import VGG19
-from keras.losses import mean_squared_error
+from tensorflow.keras.applications.vgg19 import VGG19
+from tensorflow.keras.losses import mean_squared_error
 
 
 vgg19 = VGG19(input_shape=(128,128,3), include_top=False)
