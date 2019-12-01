@@ -64,4 +64,4 @@ def workflow(image_iterators, output_folders):
         status = p.map(FunctorWrapper(output_folders), concatenated_iterators)
 
     with open("bad_files.log", "w") as f:
-        f.writelines(list(filter(lambda X: type(X) == str, status)))
+        f.write('\n'.join(list(filter(lambda X: type(X) == str, status))))
