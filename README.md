@@ -118,8 +118,24 @@ Whole code can be found for training [here](flow.py)
 
 ## Experiments
 
-We have [read](https://developers.google.com/machine-learning/gan/loss) that using [Wasserstein loss](https://arxiv.org/abs/1701.07875) is pretty good idea to use with GAN, but we were facing issues with poor image output. After more proper study we found out that using VGG 19 loss is crucial for whole network. We used tried to implement VGG19 loss and also we used mean squared error loss. 
+We can split our experiments to 3 main milestones:
 
+#### 1. Wasserstein loss
+
+We have [read](https://developers.google.com/machine-learning/gan/loss) that using [Wasserstein loss](https://arxiv.org/abs/1701.07875) is pretty good idea to use with GAN, but we were facing issues with poor image output. 
+
+#### 2. Mean Square Error
+
+Then we used MSE as loss function for generator and binary crossentropy for discriminator. 
+In this part we tried two different approaches. In first approach we used small amount of epochs (10) with huge portion of images (50 thousand).
+We were able to see edges on the geneated images but they were facing a lot of output noise.
+Second approach was complete oposite of the first one. We used 1000 epochs and only 128 images. The idea behind this approach was to "overtrain" the neural network, because we wanted to know if the neural network starts to generate nice images. The result images from this approach have minimal noise but on the other hand it only works for small range of images.
+
+#### 3. VGG 19 loss
+
+Paper proposed new loss function which calculate difference base on features extracted from pre-trained VGG19 model.
+
+-- Results here
 
 ## Evaluation
 
@@ -128,3 +144,5 @@ Then we discuss about what parts/shapes of image were done correctly.
 If we get into point, where we are unable say distinct difference between pictures we use [structural similarity](https://scikit-image.org/docs/dev/api/skimage.metrics.html#skimage.metrics.structural_similarity) to calculate it.
 
 ## Future Work
+
+In future work we would like to train on huge amount of images (prevents overtraining) and lot of epochs
