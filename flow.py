@@ -44,21 +44,19 @@ def train(*,gan,  epoch_count, batch_size, hr_images, lr_images):
         epoch_count = epoch_count,
     )
 
+    gctime = time()
     for epoch, bnumber, blr, bhr in sequencer:
         start = time()
-        gctime = time()
-            
+
         bsr = gan.g.predict(blr)
 
         gan.d.trainable=True
-        loss_d_fake = gan.d.train_on_batch(
-            bsr,
-            np.full((len(bsr),1), -1)
-        )
-        
-        loss_d_real = gan.d.train_on_batch(
-            bhr,
-            np.ones((len(bhr),1))
+        loss_d = gan.d.train_on_batch(
+            np.concatenate([bsr, bhr]),
+            np.concatenate([
+                np.full((len(bsr), 1), -1),
+                np.ones((len(bhr),1))
+            ])
         )
         gan.d.trainable=False
 
@@ -68,9 +66,8 @@ def train(*,gan,  epoch_count, batch_size, hr_images, lr_images):
         print(json.dumps({
             'epoch_no': epoch, 
             'batch_no': bnumber, 
-            'loss_d_fake': str(loss_d_fake), 
-            'loss_d_real': str(loss_d_real), 
-            'loss_gan': str(loss_gan), 
+            'loss_d': str(loss_d),
+            'loss_gan': str(loss_gan),
             'time': "%.2fs"%total 
         }), flush=True)
         if (time() - gctime) > 420: 
