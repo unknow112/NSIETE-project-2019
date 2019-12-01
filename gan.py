@@ -1,6 +1,7 @@
 import tensorflow.keras  as keras
 from generator import Generator
 from discriminator import Discriminator
+from loss import vgg_loss
 
 class Gan(keras.Model):
     def __init__(self, residual_block_count=16):
@@ -12,9 +13,9 @@ class Gan(keras.Model):
     def compile(self, **kwargs):
         opt = keras.optimizers.Adam(0.001, 0.5)
 
-        self.g.compile(optimizer=opt,loss='mse')
+        self.g.compile(optimizer=opt,loss=vgg_loss)
         self.d.compile(optimizer=opt,loss="binary_crossentropy")
-        super().compile(loss=['mse', 'binary_crossentropy'], optimizer=opt)
+        super().compile(loss=[vgg_loss, 'binary_crossentropy'], optimizer=opt)
        
 
     def call(self, x):
