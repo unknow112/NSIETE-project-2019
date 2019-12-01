@@ -51,6 +51,7 @@ def train(*,gan,  epoch_count, batch_size, hr_images, lr_images):
         bsr = gan.g.predict(blr)
 
         gan.d.trainable=True
+        gan.d.compile()
         loss_d = gan.d.train_on_batch(
             np.concatenate([bsr, bhr]),
             np.concatenate([
@@ -59,6 +60,7 @@ def train(*,gan,  epoch_count, batch_size, hr_images, lr_images):
             ])
         )
         gan.d.trainable=False
+        gan.d.compile()
 
         loss_gan = gan.train_on_batch(blr,  [bhr, np.ones((len(bhr),1))])
 
