@@ -45,9 +45,7 @@ We stored all images to our personal [server](http://static.dthi.eu/datasets/) i
 
 - [[div2k/]](http://static.dthi.eu/datasets/div2k/)  **[Source](https://data.vision.ee.ethz.ch/cvl/DIV2K/)**
 - [[Flickr2K/]](http://static.dthi.eu/datasets/Flickr2K/) **[Source](http://cv.snu.ac.kr/research/EDSR/Flickr2K.tar)**  
--- - [[dtd/]](http://static.dthi.eu/datasets/dtd/)  **[Source](http://www.robots.ox.ac.uk/~vgg/data/dtd/)**  
 - [[google\_oid/]](http://static.dthi.eu/datasets/google_oid/) (note: only validation sample fully downloaded since whole dataset is 18TB big)  **[Source](https://storage.googleapis.com/openimages/web/index.html)**  
--- - [[places205/]](http://static.dthi.eu/datasets/places205/)   **[Source](http://places.csail.mit.edu/index.html)** 
 
 We analyzed the data in datasets in [this jupyter notebook](analyze.ipynb)
 
@@ -75,6 +73,8 @@ There are many python and other important files in this repository, we provide l
  - [generator](generator.py) source code for Generator
  - [resizer](resizer.py) Utilities for image processing
  - [main](main.py) console runner for neural network
+ - [loss](loss.py) contains definitions of used loss functions
+ - [parallel_loader](parallel_loader.py) implements batch generator
 
 **Jupyter Notebooks**
  - [analyze](analyze.ipynb) Jupyter notebook with data analysis
@@ -84,6 +84,7 @@ There are many python and other important files in this repository, we provide l
 **Other Files**
  - [requirements](requirements.txt) list of required libraries for pip
  - [milestones](milestones.pdf) list of epochs with results
+ - [logs](logs) contains training logs
 
 
 ## Neural Model Architecture
@@ -119,7 +120,7 @@ Whole code can be found for training [here](flow.py)
 
 ## Experiments
 
-We can split our experiments to 3 main milestones:
+All the resulting models are described in [this](milestones.pdf) document. We can split our experiments to 3 main milestones:
 
 #### 1. Wasserstein loss
 
@@ -136,7 +137,6 @@ Second approach was complete oposite of the first one. We used 1000 epochs and o
 
 Paper proposed new loss function which calculate difference base on features extracted from pre-trained VGG19 model.
 
--- Results here
 
 ## Evaluation
 
