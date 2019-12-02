@@ -1,10 +1,10 @@
 import tensorflow.keras  as keras
 from generator import Generator
 from discriminator import Discriminator
-import tensorflow_gan as tfgan
+from loss import vgg_loss,inverted_binary_crossentropy
 
 class Gan(keras.Model):
-    def __init__(self, residual_block_count=16):
+    def __init__(self):
         super(Gan, self).__init__()
 
         self.g = Generator()
@@ -13,13 +13,8 @@ class Gan(keras.Model):
     def compile(self, **kwargs):
         opt = keras.optimizers.Adam(0.001, 0.5)
 
-        gen_loss = tfgan.losses.wargs.wasserstein_generator_loss
-        dis_loss = tfgan.losses.wargs.wasserstein_discriminator_loss
-
-        self.g.compile(optimizer=opt,loss=gen_loss)
-        self.d.compile(optimizer=opt,loss=dis_loss)
-        super().compile(loss=[gen_loss, dis_loss], optimizer=opt)
-       
+        self.d.compile(optimizer=opt,loss="binary_crossentropy")
+        super().compile(loss=[vgg_loss, inverted_binary_crossentropy], optimizer=opt)
 
     def call(self, x):
         y = self.g(x)

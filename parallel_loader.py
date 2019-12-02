@@ -2,6 +2,8 @@ import multiprocessing as mp
 import numpy as np
 from skimage.io import imread
 from skimage.color import gray2rgb
+import gc
+from time import time
 
 
 def load_and_normalize(image):
@@ -58,6 +60,7 @@ class ParallelLoader():
             return next
 
     def prepare(self):
+        gctime = time()
         for epoch in range(self.epoch_count):
             self.x , self.y = shuffle(self.x, self.y)
 
@@ -68,5 +71,9 @@ class ParallelLoader():
                 xb = np.array(list(map(load_and_normalize, xbt)))
                 yb = np.array(list(map(load_and_normalize, ybt)))
                 self.prepared.put((epoch,batch,xb,yb))
+		
+                if time() - gctime > 420:
+                    gctime = time()
+                    gc.collect()	
         
         self.prepared.put(EndItem)

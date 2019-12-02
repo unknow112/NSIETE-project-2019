@@ -1,7 +1,6 @@
 import tensorflow.keras  as keras
 from tensorflow.keras.layers import Conv2D, Dense, LeakyReLU, BatchNormalization, Flatten
-from tensorflow.keras.activations import tanh
-import numpy as np
+from tensorflow.keras.activations import sigmoid
 from functools import reduce
 
 class Discriminator(keras.Model):
@@ -31,14 +30,13 @@ class Discriminator(keras.Model):
             *residual_block(3,256,2),
             *residual_block(3,512,1),
             *residual_block(3,512,2),
+            Flatten(),
             Dense(1024),
             LeakyReLU(alpha=0.2),
-            Flatten(), # wild guess, try maybe before first dense
-            Dense(1,activation=tanh)
+            Dense(1,activation=sigmoid)
         ]
         
 
     def call(self, x):
         return reduce(lambda partial,layer: layer(partial), self.model, x)
 
-    

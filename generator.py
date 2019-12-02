@@ -1,7 +1,5 @@
 import tensorflow.keras  as keras
 from tensorflow.keras.layers import Conv2D, Dense, PReLU, BatchNormalization, Flatten, add, UpSampling2D, Activation
-from tensorflow.keras.activations import sigmoid
-import numpy as np
 from functools import reduce
 
 
