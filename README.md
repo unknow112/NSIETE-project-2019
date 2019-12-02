@@ -83,6 +83,7 @@ There are many python and other important files in this repository, we provide l
 
 **Other Files**
  - [requirements](requirements.txt) list of required libraries for pip
+ - [milestones](milestones.pdf) list of epochs with results
 
 
 ## Neural Model Architecture
