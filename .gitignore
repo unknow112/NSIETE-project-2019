@@ -3,7 +3,6 @@
 .bash_history
 .python_history
 
-*/
 
 *.model.*
 checkpoint
@@ -14,7 +13,6 @@ checkpoint
 *.png
 *.jpg
 !model.png
-*.log
 *.err
 *.stderr
 *.swp
