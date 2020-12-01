@@ -147,3 +147,36 @@ If we get into point, where we are unable say distinct difference between pictur
 ## Future Work
 
 In future work we would like to train on huge amount of images (prevents overtraining) and lot of epochs
+
+## Description of devel dataset (Update 2020-12-02 and Archiving)
+To perserve repeatibility of this repository (and because github annoys me with dependency bumping)
+Let me deliver MVP how to create used dataset on your own.
+
+### 1. get all the original files:
+first, fetch all the source images:
+
+sources for div2k and Flickr2K are mentioned [here](datasources.md).
+
+- div2k (both train and valid subset)
+- Flickr2K (Flickr2K\_HR subset) 
+- Google OID subset defined by [here](google-oid-subset). 
+
+### 2. rename files to match my setup: 
+
+prepend these prefixes to filenames based on their source and mash them into one big directory
+
+- div2k: prefix `div_`
+- Flickr2K: prefix `flickr_`
+- Google OID test subset: prefix `oid_test_`
+- Google OID validation subset: prefix `google_`
+
+### 3. create input and output images
+
+inputadata was sized to 32px squares, outputdata was 128px squares
+
+check out the [dataset\_preparation.ipynb](dataset_preparation.ipynb) notebook, which refers to [create\_dataset](create_dataset.py)`.workflow` function
+
+### 4. ???
+
+### 5. Profit
+enjoy, have fun :) 
